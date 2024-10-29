@@ -5,6 +5,7 @@ import {
   QuestionCircleOutlined,
   WechatOutlined,
   MenuOutlined,
+  MoneyCollectOutlined,
 } from "@ant-design/icons";
 import type { MenuProps } from "antd";
 import { Button, Menu, Drawer, Avatar, Dropdown } from "antd";
@@ -50,6 +51,20 @@ const NavBar: React.FC = () => {
         </Button>
       ),
       key: "chat",
+    },
+    {
+      label: (
+        <Button
+          type="link"
+          icon={<MoneyCollectOutlined className="!text-rose-600" />}
+          className={`${
+            current === "pricing" ? "uppercase border-b-2 border-rose-600" : ""
+          } text-black hover:font-bold`}
+        >
+          Giá tiền
+        </Button>
+      ),
+      key: "pricing",
     },
     {
       label: (

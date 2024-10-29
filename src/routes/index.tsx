@@ -7,6 +7,11 @@ import HomePage from "../pages/Homepage";
 import { DefaultLayout } from "../layouts/DefaultLayout";
 import FAQPage from "../pages/Faqs";
 import IssuePage from "../pages/IssuePage";
+import ContactUs from "../pages/Contactus";
+import PrivacyPolicy from "../pages/PrivacyPolicy";
+import Pricing from "../pages/Pricing";
+import Checkout from "../pages/Checkout";
+import Chatpage from "../pages/Chatpage";
 
 export const router = createBrowserRouter([
   {
@@ -46,8 +51,27 @@ export const router = createBrowserRouter([
       {
         path:'issue',
         element: <IssuePage/>
+      },
+      {
+        path:'contact',
+        element: <ContactUs/>
+      },
+      {
+        path:'privacy',
+        element: <PrivacyPolicy/>
+      },
+      {
+        path:'pricing',
+        element: <Pricing/>
+      },
+      {
+        path:'checkout',
+        element: <Checkout/>
+      },
+      {
+        path:'chat',
+        element: <Chatpage/>
       }
     ]
-
   }
 ]);
