@@ -3,6 +3,7 @@ import { Outlet } from 'react-router-dom'
 import { Layout } from 'antd'
 
 import NavBar from './partials/NavBar'
+import Footer from './partials/Footer'
 
 const { Content } = Layout
 
@@ -13,7 +14,7 @@ export const DefaultLayout = () => {
       <Content className='text-center min-h-[400px] text-black'>
         <Outlet />
       </Content>
-      {/* <Footer /> */}
+      <Footer />
     </Layout>
   )
 }
