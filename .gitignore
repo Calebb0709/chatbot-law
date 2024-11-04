@@ -1,0 +1,6 @@
+# Loại trừ tất cả các thư mục node_modules ở mọi cấp
+node_modules/
+
+# Loại trừ tệp môi trường ở cả frontend và backend
+frontend/.env
+backend/.env
