@@ -5,7 +5,7 @@ const { Option } = Select;
 
 const Checkout: React.FC = () => {
   const [selectedPlan, setSelectedPlan] = useState<"basic" | "premium" | "elite">("basic");
-  const plans = {
+  const plans: Record<"basic" | "premium" | "elite", number> = {
     basic: 19,
     premium: 29,
     elite: 49,
@@ -15,14 +15,14 @@ const Checkout: React.FC = () => {
     setSelectedPlan(value);
   };
 
-  const onFinish = (values: any) => {
+  const onFinish = (values: { name: string; email: string; cardNumber: string; expiryDate: string; cvv: string }) => {
     console.log("Payment Details:", values);
     alert("Payment successful!");
   };
 
   return (
     <div className="bg-white py-16 px-4 lg:px-40">
-      <h2 className="text-4xl font-bold text-center mb-8 text-transparent bg-gradient-to-r from-rose-400 to-rose-950 bg-clip-text">
+      <h2 className="text-4xl font-bold text-center mb-8 text-rose-600 bg-clip-text">
         Checkout
       </h2>
 
@@ -66,8 +66,8 @@ const Checkout: React.FC = () => {
           <Form.Item label="Select Plan">
             <Select defaultValue={selectedPlan} onChange={handlePlanChange}>
               {Object.keys(plans).map((plan) => (
-                <Option key={plan} value={plan}>
-                  {plan.charAt(0).toUpperCase() + plan.slice(1)} - ${plans[plan as keyof typeof plans]} / month
+                <Option key={plan} value={plan as "basic" | "premium" | "elite"}>
+                  {plan.charAt(0).toUpperCase() + plan.slice(1)} - ${plans[plan as "basic" | "premium" | "elite"]} / month
                 </Option>
               ))}
             </Select>

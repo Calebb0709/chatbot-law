@@ -13,21 +13,30 @@ const LoginPage: React.FC = () => {
     setError(null);
     setLoading(true);
 
-    // Simulate a successful login response
     try {
-      await new Promise((resolve) =>
-        setTimeout(() => resolve({ token: "mock-token" }), 1000)
-      );
+      const response = await fetch("http://localhost:8080/api/v1/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email, password }),
+      });
 
-      // Simulate storing the token
-      localStorage.setItem("accessToken", "mock-token");
-      console.log("Login successful: mock-token");
+      if (!response.ok) {
+        // Lấy thông báo lỗi từ phản hồi nếu có
+        const errorData = await response.json();
+        throw new Error(errorData.message || "Failed to login. Please try again.");
+      }
 
-      // Redirect to dashboard
+      const data = await response.json();
+      const { token } = data;
+
+      // Lưu token vào localStorage và chuyển hướng tới trang dashboard/home
+      localStorage.setItem("accessToken", token);
+      console.log("Login successful:", token);
       navigate("/home");
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (err) {
-      setError("Failed to login. This is a mock error.");
+      setError((err as Error).message);
     } finally {
       setLoading(false);
     }

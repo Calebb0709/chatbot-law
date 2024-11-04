@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   ExclamationCircleOutlined,
   HomeOutlined,
@@ -10,18 +10,77 @@ import {
 import type { MenuProps } from "antd";
 import { Button, Menu, Drawer, Avatar, Dropdown } from "antd";
 import { Link, useNavigate } from "react-router-dom";
+import { jwtDecode } from "jwt-decode";;
 
 type MenuItem = Required<MenuProps>["items"][number];
+
+// Định nghĩa kiểu cho dữ liệu giải mã token
+interface DecodedToken {
+  id: string;
+  // thêm các trường khác nếu token của bạn có
+}
+
+// Định nghĩa kiểu dữ liệu cho User
+interface User {
+  name: string;
+  // avatar: string;
+}
 
 const NavBar: React.FC = () => {
   const [current, setCurrent] = useState<string>("home");
   const [drawerVisible, setDrawerVisible] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(false); 
-  const [user, setUser] = useState({
-    name: "John Doe",
-    avatar: "../assets/avatar.jpg",
-  });
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [user, setUser] = useState<User>({ name: ""});
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const storedToken = localStorage.getItem("accessToken");
+    if (storedToken) {
+      try {
+        // Giải mã token để lấy userId với kiểu đã xác định
+        const decoded = jwtDecode<DecodedToken>(storedToken);
+        console.log(decoded);
+        const userId = decoded.id;
+
+        // Gọi API để lấy thông tin người dùng dựa trên userId
+        fetchUserData(userId);
+        setIsLoggedIn(true);
+      } catch (error) {
+        console.error("Token decoding error:", error);
+      }
+    }
+  }, []);
+
+  const fetchUserData = async (userId: string) => {
+    try {
+      const accessToken = localStorage.getItem("accessToken");
+      console.log("AccessToken:", accessToken); // Log để kiểm tra token
+  
+      if (!accessToken) {
+        console.error("AccessToken not found");
+        return; // Dừng hàm nếu không có accessToken
+      }
+  
+      const response = await fetch(`http://localhost:8080/api/v1/users/${userId}`, {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
+  
+      if (response.ok) {
+        const userData = await response.json();
+        setUser({
+          name: userData.email, 
+          // avatar: userData.avatar,
+        });
+        console.log("User data fetched successfully:", userData);
+      } else {
+        console.error("Failed to fetch user data");
+      }
+    } catch (error) {
+      console.error("Error fetching user data:", error);
+    }
+  };  
 
   const items: MenuItem[] = [
     {
@@ -110,8 +169,11 @@ const NavBar: React.FC = () => {
     setDrawerVisible(false);
   };
 
-  const handleLogin = () => {
-    setIsLoggedIn(true); 
+  const handleLogout = () => {
+    localStorage.removeItem("accessToken");
+    setIsLoggedIn(false);
+    setUser({ name: "", avatar: "" });
+    navigate("/auth/login");
   };
 
   return (
@@ -142,11 +204,7 @@ const NavBar: React.FC = () => {
                   <Menu.Item onClick={() => navigate("/profile")}>
                     Profile
                   </Menu.Item>
-                  <Menu.Item
-                    onClick={() => {
-                      setIsLoggedIn(false);
-                    }}
-                  >
+                  <Menu.Item onClick={handleLogout}>
                     Logout
                   </Menu.Item>
                 </Menu>
@@ -154,7 +212,7 @@ const NavBar: React.FC = () => {
             >
               <div className="flex items-center space-x-2 cursor-pointer">
                 <Avatar src={user.avatar} />
-                <span>{user.name}</span>
+                <span className="text-black">{user.name}</span>
               </div>
             </Dropdown>
           ) : (

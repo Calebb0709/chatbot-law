@@ -1,10 +1,17 @@
 import React, { useState } from "react";
 import { Form, Input, Button, message } from "antd";
 
+interface ContactFormValues {
+  name: string;
+  email: string;
+  subject: string;
+  message: string;
+}
+
 const ContactUs: React.FC = () => {
   const [loading, setLoading] = useState(false);
 
-  const onFinish = (values: { name: string; email: string; subject: string; message: string }) => {
+  const onFinish = (values: ContactFormValues) => {
     setLoading(true);
     // Simulate sending data to a backend
     setTimeout(() => {

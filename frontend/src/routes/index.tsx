@@ -12,6 +12,9 @@ import PrivacyPolicy from "../pages/PrivacyPolicy";
 import Pricing from "../pages/Pricing";
 import Checkout from "../pages/Checkout";
 import Chatpage from "../pages/Chatpage";
+import Profile from "../pages/ProfilePage";
+import ProfilePage from "../pages/ProfilePage";
+
 
 export const router = createBrowserRouter([
   {
@@ -71,6 +74,10 @@ export const router = createBrowserRouter([
       {
         path:'chat',
         element: <Chatpage/>
+      },
+      {
+        path: 'profile',
+        element: <ProfilePage/>
       }
     ]
   }
